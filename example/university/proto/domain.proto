@@ -71,7 +71,6 @@ service StudentService {
 
 message StudentPacket {
     message GetRequest {
-        string jwt = 1;
         repeated Scope scope = 2;
         uint64 offset = 3;
         uint64 length = 4;
@@ -110,7 +109,6 @@ message StudentPacket {
     }
 
     message CreateRequest {
-        string jwt = 1;
         Student.Data student_data = 2;
     }
 
@@ -129,7 +127,6 @@ message StudentPacket {
     }
 
     message UpdateRequest {
-        string jwt = 1;
         Student.Id student_id = 2;
         Student.Data student_data = 3;
     }
@@ -150,7 +147,6 @@ message StudentPacket {
     }
 
     message DeleteRequest {
-        string jwt = 1;
         Student.Id student_id = 2;
     }
 
@@ -173,7 +169,6 @@ message StudentPacket {
     }
 
     message SetGroupRequest {
-        string jwt = 1;
         Student.Id student = 2;
         Group.Id group = 3;
     }
@@ -223,7 +218,6 @@ service GroupService {
 
 message GroupPacket {
     message GetRequest {
-        string jwt = 1;
         repeated Scope scope = 2;
         uint64 offset = 3;
         uint64 length = 4;
