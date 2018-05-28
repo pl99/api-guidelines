@@ -1,0 +1,15 @@
+syntax = "proto3";
+package Api.Sibur.University.Structures;
+
+// Описания момента во времени. Определяется как количество милисекунд,
+// прошедших с полуночи (00:00:00 UTC) 1 января 1970 года (четверг)
+message Timestamp {
+    // количество милисекунд, прошедших c 00:00:00 UTC 01.01.1970
+    int64 milliseconds = 1;
+}
+
+enum CommonError {
+    INTERNAL_ERROR = 0;
+    FORBIDDEN = 1;
+    INCORRECT_REQUEST = 2;
+}

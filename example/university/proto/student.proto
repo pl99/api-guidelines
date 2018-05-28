@@ -1,0 +1,232 @@
+syntax = "proto3";
+package Api.Sibur.University.Student;
+
+import "google/api/annotations.proto";
+import "university/proto/structures.proto";
+
+// Студент, которой учится в университете
+message Student {
+    // Номер студента
+    uint64 id = 1;
+
+    // Данные о студенте
+    Data data = 2;
+
+    // Идентификатор группы в которой обучается студент
+    uint64 group_id = 3;
+
+    // Данные о студенте
+    message Data {
+        // ФИО студента
+        string full_name = 1;
+
+        // Дата рождения студента
+        Structures.Timestamp birthday = 2;
+    }
+}
+
+// Сервис для управления студентами
+service StudentService {
+    rpc get (GetRequest) returns (GetResponse) {
+        option (google.api.http) = {
+            get: "/student/get"
+            body: "*"
+        };
+    }
+
+    rpc create (CreateRequest) returns (CreateResponse) {
+        option (google.api.http) = {
+            post: "/student/create"
+            body: "*"
+        };
+    }
+
+    rpc update (UpdateRequest) returns (UpdateResponse) {
+        option (google.api.http) = {
+            post: "/student/update"
+            body: "*"
+        };
+    }
+
+    rpc delete (DeleteRequest) returns (DeleteResponse) {
+        option (google.api.http) = {
+            post: "/student/update"
+            body: "*"
+        };
+    }
+
+    // Включить студента в определенную группу
+    rpc setGroup (SetGroupRequest) returns (SetGroupResponse) {
+        option (google.api.http) = {
+            post: "/student/set-group"
+            body: "*"
+        };
+    }
+}
+
+message GetRequest {
+    repeated Scope scope = 1;
+    uint64 offset = 2;
+    uint64 length = 3;
+
+    message Scope {
+        oneof condition {
+            ById by_id = 1;
+            LikeFullName like_full_name = 2;
+        }
+
+        message ById {
+            repeated uint64 student_id = 1;
+        }
+
+        message LikeFullName {
+            string full_name = 1;
+        }
+    }
+}
+
+message GetResponse {
+    oneof result {
+        Batch batch = 1;
+        Error error = 2;
+    }
+
+    message Error {
+        oneof type {
+            Structures.CommonError common_error = 1;
+            SpecificError specific_error = 2;
+        }
+
+        message SpecificError {
+            Code code = 1;
+            string message = 2;
+
+            enum Code {
+                INVALID_SCOPE_CONDITION = 0;
+            }
+        }
+    }
+
+    message Batch {
+        repeated Student student = 1;
+    }
+}
+
+message CreateRequest {
+    Student.Data student_data = 1;
+}
+
+message CreateResponse {
+    oneof result {
+        Student student = 1;
+        Error error = 2;
+    }
+
+    message Error {
+        oneof type {
+            Structures.CommonError common_error = 1;
+            SpecificError specific_error = 2;
+        }
+
+        message SpecificError {
+            Code code = 1;
+            string message = 2;
+
+            enum Code {
+                INVALID_NAME = 0;
+                INVALID_BIRTHDAY = 1;
+            }
+        }
+    }
+}
+
+message UpdateRequest {
+    uint64 student_id = 1;
+    Student.Data student_data = 2;
+}
+
+message UpdateResponse {
+    oneof result {
+        Student student = 1;
+        Error error = 2;
+    }
+
+    message Error {
+        oneof type {
+            Structures.CommonError common_error = 1;
+            SpecificError specific_error = 2;
+        }
+
+        message SpecificError {
+            Code code = 1;
+            string message = 2;
+
+            enum Code {
+                STUDENT_NOT_FOUND = 0;
+                INVALID_NAME = 1;
+                INVALID_BIRTHDAY = 2;
+            }
+        }
+    }
+}
+
+message DeleteRequest {
+    uint64 student_id = 1;
+}
+
+message DeleteResponse {
+    oneof result {
+        Status status = 1;
+        Error error = 2;
+    }
+
+    enum Status {
+        REMOVED = 0;
+    }
+
+    message Error {
+        oneof type {
+            Structures.CommonError common_error = 1;
+            SpecificError specific_error = 2;
+        }
+
+        message SpecificError {
+            Code code = 1;
+            string message = 2;
+
+            enum Code {
+                STUDENT_NOT_FOUND = 0;
+                REMOVAL_IMPOSSIBLE = 1;
+            }
+        }
+    }
+}
+
+message SetGroupRequest {
+    uint64 student_id = 1;
+    uint64 group_id = 2;
+}
+
+message SetGroupResponse {
+    oneof result {
+        Student student = 1;
+        Error error = 2;
+    }
+
+    message Error {
+        oneof type {
+            Structures.CommonError common_error = 1;
+            SpecificError specific_error = 2;
+        }
+
+        message SpecificError {
+            Code code = 1;
+            string message = 2;
+
+            enum Code {
+                STUDENT_NOT_FOUND = 0;
+                GROUP_NOT_FOUND = 1;
+            }
+        }
+    }
+}

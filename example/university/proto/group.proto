@@ -1,0 +1,75 @@
+syntax = "proto3";
+package Api.Sibur.University.Group;
+
+import "google/api/annotations.proto";
+import "university/proto/structures.proto";
+
+// Группа в которой учатся студенты
+message Group {
+    // Уникальный идентификатор группы
+    uint64 id = 1;
+
+    // Название группы
+    string name = 2;
+
+    // Студенты, которые обучаются в группе
+    repeated uint64 student_id = 3;
+}
+
+// Сервис для управления группами
+service GroupService {
+    rpc get (GetRequest) returns (GetResponse) {
+        option (google.api.http) = {
+            post: "/group/get"
+            body: "*"
+        };
+    }
+}
+
+message GetRequest {
+    repeated Scope scope = 1;
+    uint64 offset = 2;
+    uint64 length = 3;
+
+    message Scope {
+        oneof condition {
+            ById by_id = 1;
+            LikeName like_name = 2;
+        }
+
+        message ById {
+            repeated uint64 group_id = 1;
+        }
+
+        message LikeName {
+            string name = 1;
+        }
+    }
+}
+
+message GetResponse {
+    oneof result {
+        Batch batch = 1;
+        Error error = 2;
+    }
+
+    message Error {
+        oneof type {
+            Structures.CommonError common_error = 1;
+            SpecificError specific_error = 2;
+        }
+
+        message SpecificError {
+            Code code = 1;
+            string message = 2;
+
+            enum Code {
+                INVALID_SCOPE_CONDITION = 0;
+            }
+        }
+    }
+
+    message Batch {
+        repeated Group group = 1;
+    }
+}
