@@ -49,7 +49,7 @@ message GetRequest {
 
 message GetResponse {
     oneof result {
-        Batch batch = 1;
+        Batch data = 1;
         Error error = 2;
     }
 

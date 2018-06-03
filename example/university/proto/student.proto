@@ -87,7 +87,7 @@ message GetRequest {
 
 message GetResponse {
     oneof result {
-        Batch batch = 1;
+        Batch data = 1;
         Error error = 2;
     }
 
@@ -118,7 +118,7 @@ message CreateRequest {
 
 message CreateResponse {
     oneof result {
-        Student student = 1;
+        Student data = 1;
         Error error = 2;
     }
 
@@ -147,7 +147,7 @@ message UpdateRequest {
 
 message UpdateResponse {
     oneof result {
-        Student student = 1;
+        Student data = 1;
         Error error = 2;
     }
 
@@ -176,7 +176,7 @@ message DeleteRequest {
 
 message DeleteResponse {
     oneof result {
-        Status status = 1;
+        Status data = 1;
         Error error = 2;
     }
 
@@ -209,7 +209,7 @@ message SetGroupRequest {
 
 message SetGroupResponse {
     oneof result {
-        Student student = 1;
+        Student data = 1;
         Error error = 2;
     }
 
