@@ -1,8 +1,10 @@
 syntax = "proto3";
 package Api.Sibur.University.Group;
 
+option go_package="University";
+
 import "google/api/annotations.proto";
-import "university/proto/structures.proto";
+import "university/proto/commom.proto";
 
 // Группа в которой учатся студенты
 message Group {
@@ -18,7 +20,7 @@ message Group {
 
 // Сервис для управления группами
 service GroupService {
-    rpc get (GetRequest) returns (GetResponse) {
+    rpc get (GroupPacket.GetRequest) returns (GroupPacket.GetResponse) {
         option (google.api.http) = {
             post: "/group/get"
             body: "*"
@@ -26,50 +28,52 @@ service GroupService {
     }
 }
 
-message GetRequest {
-    repeated Scope scope = 1;
-    uint64 offset = 2;
-    uint64 length = 3;
+message GroupPacket {
+    message GetRequest {
+        repeated Scope scope = 1;
+        uint64 offset = 2;
+        uint64 length = 3;
 
-    message Scope {
-        oneof condition {
-            ById by_id = 1;
-            LikeName like_name = 2;
-        }
+        message Scope {
+            oneof condition {
+                ById by_id = 1;
+                LikeName like_name = 2;
+            }
 
-        message ById {
-            repeated uint64 group_id = 1;
-        }
+            message ById {
+                repeated uint64 group_id = 1;
+            }
 
-        message LikeName {
-            string name = 1;
-        }
-    }
-}
-
-message GetResponse {
-    oneof result {
-        Batch data = 1;
-        Error error = 2;
-    }
-
-    message Error {
-        oneof type {
-            Structures.CommonError common_error = 1;
-            SpecificError specific_error = 2;
-        }
-
-        message SpecificError {
-            Code code = 1;
-            string message = 2;
-
-            enum Code {
-                INVALID_SCOPE_CONDITION = 0;
+            message LikeName {
+                string name = 1;
             }
         }
     }
 
-    message Batch {
-        repeated Group group = 1;
+    message GetResponse {
+        oneof result {
+            Batch data = 1;
+            Error error = 2;
+        }
+
+        message Error {
+            oneof type {
+                Api.Sibur.University.Common.Error common_error = 1;
+                SpecificError specific_error = 2;
+            }
+
+            message SpecificError {
+                Type type = 1;
+                string message = 2;
+
+                enum Type {
+                    INVALID_SCOPE_CONDITION = 0;
+                }
+            }
+        }
+
+        message Batch {
+            repeated Group group = 1;
+        }
     }
 }
