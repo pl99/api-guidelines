@@ -1,0 +1,37 @@
+syntax = "proto3";
+package Api.Sibur.University.Health;
+
+option go_package="University";
+
+import "google/api/annotations.proto";
+
+service HealthService {
+    rpc get (HealthPacket.CheckRequest) returns (HealthPacket.CheckResponse) {
+        option (google.api.http) = {
+            get: "/health/check"
+        };
+    }
+
+    rpc echo (HealthPacket.EchoRequest) returns (HealthPacket.EchoResponse) {
+        option (google.api.http) = {
+            post: "/health/echo"
+            body: "*"
+        };
+    }
+}
+
+message HealthPacket {
+    message CheckRequest {}
+
+    message CheckResponse {
+        bool status = 1;
+    }
+
+    message EchoRequest {
+        string message = 1;
+    }
+
+    message EchoResponse {
+        string echo = 1;
+    }
+}
