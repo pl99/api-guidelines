@@ -1,0 +1,3 @@
+[submodule "example/google"]
+	path = example/google
+	url = https://gitlab.com/sibur/api/google.git

@@ -1,5 +1,7 @@
 syntax = "proto3";
-package Api.Sibur.University.Structures;
+package Api.Sibur.University.Common;
+
+option go_package="University";
 
 // Описания момента во времени. Определяется как количество милисекунд,
 // прошедших с полуночи (00:00:00 UTC) 1 января 1970 года (четверг)
@@ -8,8 +10,12 @@ message Timestamp {
     int64 milliseconds = 1;
 }
 
-enum CommonError {
-    INTERNAL_ERROR = 0;
-    FORBIDDEN = 1;
-    INCORRECT_REQUEST = 2;
+message Error {
+    Type type = 1;
+    string text = 2;
+
+    enum Type {
+        INTERNAL_ERROR = 0;
+        FORBIDDEN = 1;
+    }
 }
